@@ -1,0 +1,12 @@
+[submodule "ext/pelican"]
+	path = ext/pelican
+	url = git@github.com:pedrohdz/pelican.git
+[submodule "ext/pelican-themes"]
+	path = ext/pelican-themes
+	url = git@github.com:pedrohdz/pelican-themes.git
+[submodule "ext/pelican-plugins"]
+	path = ext/pelican-plugins
+	url = git@github.com:pedrohdz/pelican-plugins.git
+[submodule "ext/bootswatch"]
+	path = ext/bootswatch
+	url = git@github.com:pedrohdz/bootswatch.git
