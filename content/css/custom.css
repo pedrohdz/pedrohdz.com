@@ -1,0 +1,41 @@
+/* ----
+ * Global
+ */
+th {
+  background-color: #777777;
+  color: #ffffff;
+}
+
+#banner {
+    background-position: center center;
+}
+
+.drounin-figure {
+  padding-bottom: 10px;
+  padding-bottom: 30px;
+}
+
+/* ----
+ * Sidebar
+ */
+/*
+#sidebar .list-group-item {
+  padding: 2px 10px;
+}
+
+#sidebar h4 {
+  margin-bottom: 2px;
+}
+
+div#sidebar aside section.well ul {
+  margin-bottom: 0px;
+}
+*/
+
+
+/* ----
+ * Social box
+ */
+ul.list-group#social {
+  text-align: center;
+}

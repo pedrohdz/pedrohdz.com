@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% set page = {
+          'title': 'About'
+}
+%}
+{% block title %}{{ page.title }} - {{ SITENAME }}{% endblock %}
+
+{% block content %}
+<section id="content" class="body">
+  {% if page.title %}
+  <h1 class="entry-title">{{ page.title }}</h1>
+  {% endif %}
+  <!-- Content -->
+  <div class="entry-content">
+    <p>
+      A software developer who is lucky enough to have his hobby as his job.
+      Please check me out through the social media links below, or write to me
+      via the <a href="{{ SITEURL }}/pages/contact/">contact page</a>.
+    </p>
+
+    <p>Cheers!</p>
+  </div>
+  <!-- End Content -->
+
+  <!-- Social -->
+  <div>
+    <li class="list-group-item">
+      <ul class="list-group list-inline" id="social">
+        {% for s in SOCIAL %}
+          {% if s[2] %}
+            {% set name_sanitized = s[2]|lower|replace('+','-plus')|replace(' ','-') %}
+          {% else %}
+            {% set name_sanitized = s[0]|lower|replace('+','-plus')|replace(' ','-') %}
+          {% endif %}
+          {% set iconattributes = '"fa fa-' ~ name_sanitized ~ ' fa-stack-1x fa-inverse"' %}
+
+          <li class="list-group-item">
+            <a href="{{ s[1] }}">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class={{ iconattributes }}></i>
+              </span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+  </div>
+  <!-- End Social -->
+
+</section>
+{% endblock %}
+

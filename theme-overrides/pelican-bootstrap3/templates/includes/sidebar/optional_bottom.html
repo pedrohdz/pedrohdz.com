@@ -1,0 +1,25 @@
+{% from 'includes/sidebar/macros.jinja' import title %}
+
+<!-- Sidebar/Social -->
+<li class="list-group-item well well-sm" id="social-box">
+  <ul class="list-group list-inline" id="social">
+    {% for s in SOCIAL %}
+      {% if s[2] %}
+        {% set name_sanitized = s[2]|lower|replace('+','-plus')|replace(' ','-') %}
+      {% else %}
+        {% set name_sanitized = s[0]|lower|replace('+','-plus')|replace(' ','-') %}
+      {% endif %}
+      {% set iconattributes = '"fa fa-' ~ name_sanitized ~ ' fa-stack-1x fa-inverse"' %}
+
+      <li class="list-group-item">
+        <a href="{{ s[1] }}">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class={{ iconattributes }}></i>
+          </span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</li>
+<!-- End Sidebar/Social -->

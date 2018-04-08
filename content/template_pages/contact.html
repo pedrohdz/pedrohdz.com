@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% set page = {
+          'title': 'Contact'
+}
+%}
+{% block title %}{{ page.title }} - {{ SITENAME }}{% endblock %}
+
+{% block content %}
+<section id="content" class="body">
+  {% if page.title %}
+  <h1 class="entry-title">{{ page.title }}</h1>
+  {% endif %}
+  <div class="entry-content">
+    <form id="contact-form"
+          class="form-horizontal"
+          method="POST">
+      <fieldset>
+        <div class="form-group">
+          <label for="inputName" class="col-lg-2 control-label">Name</label>
+          <div class="col-lg-10">
+            <input name="name"
+                   type="text"
+                   class="form-control"
+                   id="inputName"
+                   placeholder="Your name" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+          <div class="col-lg-10">
+            <input name="_replyto"
+                   type="email"
+                   class="form-control"
+                   id="inputEmail"
+                   placeholder="Your email"
+                   required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputSubject" class="col-lg-2 control-label">
+            Subject
+          </label>
+          <div class="col-lg-10">
+            <input name="_subject"
+                   name="name"
+                   type="text"
+                   class="form-control"
+                   id="inputSubject"
+                   placeholder="Subject"
+                   required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="textArea" class="col-lg-2 control-label">Message</label>
+          <div class="col-lg-10">
+            <textarea name="message"
+                      class="form-control"
+                      rows="5"
+                      id="textArea"
+                      placeholder="Your message"
+                      required>
+            </textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-lg-10 col-lg-offset-2">
+            <button type="reset" class="btn btn-default">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+        <input name="_gotcha" type="text" style="display:none" />
+      </fieldset>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{{ SITEURL }}/js/jquery.validate.min.js"></script>
+<script>
+function attach_action(left, right) {
+  var action = ['//formspree.io/', left, '@', right, '.', 'com'];
+  $("#contact-form").attr('action', action.join(''));
+};
+
+function contact_setup() {
+  $("#contact-form").validate({
+    submitHandler: function(form) {
+      attach_action('pedrocodez', 'gmail');
+      form.submit();
+    }
+  });
+};
+
+contact_setup();
+</script>
+{% endblock %}
