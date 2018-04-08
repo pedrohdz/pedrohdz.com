@@ -22,6 +22,7 @@ Initial setup
   $ git submodule update --init --recursive
   $ python3.6 -m venv .virtualenv
   $ source .virtualenv/bin/activate
+  $ pip install -r requirements.txt
 
 
 Local testing
@@ -53,6 +54,14 @@ Deploy
   $ aws s3 sync --delete ./output/ s3://pedrohdz.com/
 
 Check `pedrohdz.com <https://pedrohdz.com/>`_.
+
+
+Clean up
+~~~~~~~~
+
+.. code:: sh
+
+  $ rm -Rf .virtualenv/ __pycache__/ output/
 
 
 -------------------------------------------------------------------------------
