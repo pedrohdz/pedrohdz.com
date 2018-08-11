@@ -1,3 +1,22 @@
+{#
+  Thanks to:
+    - http://alex-d.github.io/Cookies-EU-banner/
+    - https://github.com/Alex-D/Cookies-EU-banner
+#}
+<script src="{{ SITEURL }}/js/cookies-eu-banner.min.js"></script>
+<div id="cookies-eu-banner" class="alert alert-dismissible alert-warning" style="display: none;">
+  <div>
+    This site uses the basic Google Analytics implementation with anonymized
+    data. By continuing your visit to this site, you accept the use of cookies
+    by Google Analytics.  For more information please read the
+    <a href="{{ SITEURL }}/pages/privacy/" id="cookies-eu-more" title="privacy policy">Privacy Policy</a>.
+  </div>
+  <div class="pull-right">
+    <button id="cookies-eu-reject" class="btn btn-info btn-sm">Reject</button>
+    <button id="cookies-eu-accept" class="btn btn-primary btn-sm">Accept</button>
+  </div>
+</div>
+
 <footer>
    <div class="container{% if BOOTSTRAP_FLUID %}-fluid{% endif %}">
       <hr>

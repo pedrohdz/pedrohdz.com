@@ -39,3 +39,30 @@ div#sidebar aside section.well ul {
 ul.list-group#social {
   text-align: center;
 }
+
+
+/* ----
+ * Privacy policy
+ */
+#cookies-eu-banner {
+    margin-left: -125px; 
+    position: fixed; 
+    z-index: 100; 
+
+    max-width: 575px;
+    width: 100%;
+    height: auto;
+    bottom: 14px; 
+    right: 14px;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.80);
+    border-color: rgba(0, 0, 0, 0.80);
+}
+
+@media (max-width: 600px) {
+  #cookies-eu-banner {
+    bottom: 0!important;
+    left: 0;
+    right: 0;
+    margin-left: 0;
+  }
+}
