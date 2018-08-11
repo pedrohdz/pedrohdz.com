@@ -23,4 +23,4 @@ DELETE_OUTPUT_DIRECTORY = True
 # -----------------------------------------------------------------------------
 GOOGLE_ANALYTICS_UNIVERSAL = 'UA-85367855-1'
 GOOGLE_ANALYTICS_UNIVERSAL_PROPERTY = 'auto'
-DISQUS_SITENAME = 'droun-in'
+#DISQUS_SITENAME = 'droun-in'
