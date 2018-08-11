@@ -130,6 +130,7 @@ DISPLAY_CATEGORIES_ON_MENU = False
 TEMPLATE_PAGES = {
     'template_pages/contact.html': 'pages/contact/index.html',
     'template_pages/about.html': 'pages/about/index.html',
+    'template_pages/privacy.html': 'pages/privacy/index.html',
     'template_pages/google37d6d99e76a0b857.html': 'google37d6d99e76a0b857.html'
 }
 
