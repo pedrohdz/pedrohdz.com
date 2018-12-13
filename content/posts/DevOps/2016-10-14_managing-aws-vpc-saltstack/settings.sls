@@ -1,7 +1,7 @@
 {% set profile = {
-    'keyid': 'AKIAI6KSXB7BE3SPQ3WQ',
-    'key': 'Zm4v1bsYiVX+ROPH4ZsI8qi9O0ZmxSvYaJdO5FgN',
-    'region': 'us-west-2'
+    'keyid': salt['environ.get']('AWS_KEY_ID'),
+    'key': salt['environ.get']('AWS_ACCESS_KEY'),
+    'region': salt['environ.get']('AWS_REGION')
     }
 %}
 {% set vpc_name = 'DEMO-SALTSTACK-VPC' %}
