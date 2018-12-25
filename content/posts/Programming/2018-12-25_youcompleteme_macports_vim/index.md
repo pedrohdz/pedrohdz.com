@@ -1,5 +1,5 @@
 Title: YouCompleteMe on Macports Vim
-Modified: 2016-12-15
+Modified: 2018-12-25
 Tags: macports, vim
 Authors: Pedro F. H.
 Summary: How to get YouCompleteMe to work with Macports Vim
@@ -27,11 +27,11 @@ Detailed instructions provided in the following sections.
 
 My setup at time of writing this post:
 
-  - OS X 10.11.6
-  - MacPorts 2.3.4
-  - [YouCompleteMe commit d55b5c0][]
-  - Vim 8.0
-  - Python 3.5.2 (this should work with 2.7)
+  - OS X 10.14.2
+  - MacPorts 2.5.4
+  - [YouCompleteMe commit 7997fc5][]
+  - Vim 8.1
+  - Python 3.7.1 (this should work with 2.7)
 
 
 #### Setting up your environment PATH
@@ -66,10 +66,10 @@ The key takeaway here is using `port select` to maintain the symlinks pointing
 the actual versions of `python` being used.
 
 ```bash
-$ sudo port install python35 py35-readline
-$ sudo port select --set python python35
-$ sudo port select --set python3 python35
-$ sudo port select --set pip pip35
+$ sudo port install python37 py37-pip py37-gnureadline
+$ sudo port select --set python python37
+$ sudo port select --set python3 python37
+$ sudo port select --set pip pip37
 ```
 
 In this case executing `python` and `python3` point to the `python35`
@@ -86,7 +86,7 @@ _MacPorts_ `vim` does not come with _Python_ support by default.  This is
 simple to remedy using [MacPorts variants][].  Just reinstall _Vim_ with:
 
 ```bash
-$ sudo port install vim +python35 +huge
+$ sudo port install vim +python37 +huge
 ```
 
 To get a full list of features that `vim` is compiled with execute
@@ -148,7 +148,7 @@ These may be helpful as well:
     (The YouCompleteMe homepage)
 [YouCompleteMe on GitHub]: https://github.com/Valloric/YouCompleteMe
 [YouCompleteMe demo]: https://github.com/Valloric/YouCompleteMe#intro
-[YouCompleteMe commit d55b5c0]: https://github.com/Valloric/YouCompleteMe/commit/d55b5c09d6f882bcc0cd05b0b925ea68e6e11274
+[YouCompleteMe commit 7997fc5]: https://github.com/Valloric/YouCompleteMe/commit/7997fc5536e8220ed2798c5522a1eb4421577fa2
 
 [MacVim]: http://macvim-dev.github.io/macvim/
     (MacVim homepage)
