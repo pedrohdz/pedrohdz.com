@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# For more information:
+#   - http://plantuml.com/
+#   - http://www.graphviz.org/
+#
+# Graphviz can be installed via MacPorts with `sudo port install graphviz`.
+
+jar="build/plantuml.jar"
+
+# shellcheck disable=SC2068
+java -D'java.awt.headless=true' -jar "$jar" ${@}

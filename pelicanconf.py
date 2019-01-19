@@ -9,8 +9,10 @@ SITEURL = ''
 TIMEZONE = 'UTC'
 DEFAULT_LANG = 'en'
 
-theme_name = 'pelican-bootstrap3'
-theme_override = path.join('theme-overrides', theme_name)
+_THEME_NAME = 'pelican-bootstrap3'
+_THEME_OVERRIDE = path.join('theme-overrides', _THEME_NAME)
+_CUSTOM_BOOTSTRAP_THEME = 'drounin'
+_CUSTOM_BOOTSTRAP_CSS = 'bootstrap.{}.min.css'.format(_CUSTOM_BOOTSTRAP_THEME)
 
 
 # -----------------------------------------------------------------------------
@@ -24,8 +26,9 @@ IGNORE_FILES = ('.#*', '.*.swp', '*~')
 # Including `plugins/bootstrap-rst` is a shitty hack to resove Python path
 # issues.
 PLUGIN_PATHS = (
-    path.join('ext', 'pelican-plugins'),
-    path.join('ext', 'pelican-plugins', 'bootstrap-rst'))
+    path.join('ext', 'plugins', 'pelican-plugins'),
+    path.join('ext', 'plugins', 'other'))
+# path.join('ext', 'plugins', 'pelican-plugins', 'bootstrap-rst'))
 
 # Blog/articles
 ARTICLE_PATHS = ('posts',)
@@ -44,20 +47,25 @@ PAGE_SAVE_AS = 'pages/{slug}/index.html'
 
 USE_FOLDER_AS_CATEGORY = False
 SLUGIFY_SOURCE = 'basename'
-PATH_METADATA = ('posts/(?P<category>[^/]+)'
-                 '/(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>[^/]+)/')
+PATH_METADATA = (r'posts/(?P<category>[^/]+)'
+                 r'/(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>[^/]+)/')
 
-THEME = path.join('ext', 'pelican-themes', theme_name)
+THEME = path.join('ext', 'themes', 'pelican-themes', _THEME_NAME)
+THEME_STATIC_DIR = 'theme'
 THEME_TEMPLATES_OVERRIDES = (
     'templates',
-    path.join(theme_override, 'templates'))
+    path.join(_THEME_OVERRIDE, 'templates'))
 
 STATIC_PATHS = (
     'css',
     'images',
     'js',
     'posts',
-    path.join(theme_override, 'static'))
+    path.join(_THEME_OVERRIDE, 'static'))
+
+EXTRA_PATH_METADATA = {
+    path.join('css', _CUSTOM_BOOTSTRAP_CSS): {
+        'path': path.join('theme', 'css', _CUSTOM_BOOTSTRAP_CSS)}}
 
 
 # -----------------------------------------------------------------------------
@@ -66,7 +74,7 @@ STATIC_PATHS = (
 PLUGINS = ('series',
            'tag_cloud',
            'i18n_subsites',
-           'bootstrapify',
+           'pelican-bootstrapify',
            'bootstrap-rst',
            'plantuml')
 JINJA_ENVIRONMENT = {'extensions': ('jinja2.ext.i18n', 'jinja2.ext.do')}
@@ -146,7 +154,7 @@ MENUITEMS = (
 # -----------------------------------------------------------------------------
 # Theme configuration (pelican-bootstrap3)
 # -----------------------------------------------------------------------------
-BOOTSTRAP_THEME = 'drounin'
+BOOTSTRAP_THEME = _CUSTOM_BOOTSTRAP_THEME
 # BOOTSTRAP_THEME = 'yeti'
 # BOOTSTRAP_THEME = 'simplex'
 # BOOTSTRAP_THEME = 'superhero'
