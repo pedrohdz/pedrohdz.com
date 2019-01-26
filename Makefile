@@ -1,3 +1,6 @@
+SITE := pedrohdz.com
+S3_BUCKET := $(SITE)
+
 PLANTUML_VERSION := 1.2019.0
 PLANTUML_SHA256 := 767b2a3f5512ae0636fdaea8a54a58b96ffa8fd41933f941e6fb55bafed381e1
 
@@ -7,6 +10,7 @@ VENV_BIN_DIR := $(VENV_DIR)/bin
 VENV_CONFIG_FILES := requirements.txt setup.cfg setup.py Makefile
 PELICAN := ./$(VENV_BIN_DIR)/pelican
 PIP := ./$(VENV_BIN_DIR)/pip3
+AWS := ./$(VENV_BIN_DIR)/aws
 
 export PATH := scripts:$(PATH)
 export GRAPHVIZ_DOT := $(shell which dot)
@@ -42,7 +46,7 @@ prepare: | venv-build plantuml-install
 #------------------------------------------------------------------------------
 # Python venv tasks
 #------------------------------------------------------------------------------
-VENV_BUILT_FLAG = $(BUILD_DIR)/venv-build-FLAG
+VENV_BUILT_FLAG := $(BUILD_DIR)/venv-build-FLAG
 
 .PHONY: venv-build venv-clean venv-update-freeze
 
@@ -107,9 +111,9 @@ plantuml-docker-stop:
 #------------------------------------------------------------------------------
 # Pelican tasks
 #------------------------------------------------------------------------------
-PELICAN_BUILT_LOCAL_FLAG = $(BUILD_DIR)/pelican-build-local-FLAG
-PELICAN_BUILT_PROD_FLAG = $(BUILD_DIR)/pelican-build-production-FLAG
-CONTENT_FILES = $(shell find ./content/ -type f | sed -e 's/ /\\ /') \
+PELICAN_BUILT_LOCAL_FLAG := $(BUILD_DIR)/pelican-build-local-FLAG
+PELICAN_BUILT_PROD_FLAG := $(BUILD_DIR)/pelican-build-production-FLAG
+CONTENT_FILES := $(shell find ./content/ -type f | sed -e 's/ /\\ /') \
 				$(shell find ./theme-overrides/ -type f) \
 				pelicanconf.py \
 				publishconf.py
@@ -144,5 +148,17 @@ $(PELICAN_BUILT_PROD_FLAG): $(CONTENT_FILES) $(VENV_CONFIG_FILES) | prepare
 		--delete-output-directory \
 		--settings publishconf.py
 	touch $(PELICAN_BUILT_PROD_FLAG)
+
+
+#------------------------------------------------------------------------------
+# Deployment tasks
+#------------------------------------------------------------------------------
+.PHONY: deploy
+
+deploy: | pelican-build-production
+	$(AWS) s3 sync --delete \
+		--exclude .DS_Store \
+		./output/ \
+		s3://$(S3_BUCKET)/
 
 # vim: noexpandtab:tabstop=4:shiftwidth=4
