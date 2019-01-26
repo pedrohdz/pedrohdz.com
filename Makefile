@@ -173,7 +173,8 @@ $(PELICAN_BUILT_PROD_FLAG): $(CONTENT_FILES) $(VENV_CONFIG_FILES) | prepare
 .PHONY: deploy
 
 deploy: | pelican-build-production
-	$(AWS) s3 sync --delete \
+	$(AWS) s3 sync \
+		--delete \
 		--exclude .DS_Store \
 		./output/ \
 		s3://$(S3_BUCKET)/
