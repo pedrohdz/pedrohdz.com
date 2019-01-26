@@ -20,12 +20,10 @@ Initial setup
 
 .. code:: sh
 
-  $ git clone git@github.com:pedrohdz/pedrohdz.com.git
-  $ cd pedrohdz.com
-  $ git submodule update --init --recursive
-  $ python3.6 -m venv .virtualenv
-  $ source .virtualenv/bin/activate
-  $ pip install -r requirements.txt
+  git clone git@github.com:pedrohdz/pedrohdz.com.git
+  cd pedrohdz.com
+  git submodule update --init
+  make
 
 
 Local testing
@@ -35,15 +33,7 @@ In one terminal execute:
 
 .. code:: sh
 
-  $ pelican --debug --autoreload
-
-In a second terminal execute:
-
-.. code:: sh
-
-  $ cd output/
-  $ python -m pelican.server
-
+  make pelican-server
 
 Point your browser at `http://localhost:8000/ <http://localhost:8000/>`_.
 
@@ -53,10 +43,13 @@ Deploy
 
 .. code:: sh
 
-  $ pelican -d -s publishconf.py
-  $ aws s3 sync --delete ./output/ s3://pedrohdz.com/
+  make bumpversion-*
+  git push && git push --tags
 
-Check `pedrohdz.com <https://pedrohdz.com/>`_.
+Check `Travis-CI <https://travis-ci.org/pedrohdz/pedrohdz.com>`_. and wait for
+the build to finish. It should auto deploy on new version tags.
+
+Then check `pedrohdz.com <https://pedrohdz.com/>`_.
 
 
 Clean up
@@ -64,7 +57,7 @@ Clean up
 
 .. code:: sh
 
-  $ rm -Rf .virtualenv/ __pycache__/ output/
+  make clean
 
 
 -------------------------------------------------------------------------------
