@@ -13,7 +13,9 @@ before_install:
   - git submodule update --init
 
 script:
+  - echo "travis_fold:start:SCRIPT folding starts"
   - make clean pelican-build-production
+  - echo "travis_fold:end:SCRIPT folding ends"
 
 deploy:
   provider: script
