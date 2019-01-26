@@ -11,6 +11,7 @@ VENV_CONFIG_FILES := requirements.txt setup.cfg setup.py Makefile
 PELICAN := ./$(VENV_BIN_DIR)/pelican
 PIP := ./$(VENV_BIN_DIR)/pip3
 AWS := ./$(VENV_BIN_DIR)/aws
+BUMP_VERSION = ./$(VENV_BIN_DIR)/bump2version
 
 export PATH := scripts:$(PATH)
 export GRAPHVIZ_DOT := $(shell which dot)
@@ -68,6 +69,21 @@ $(VENV_BUILT_FLAG): $(VENV_CONFIG_FILES) | directories
 
 venv-update-freeze: | venv-build
 	$(PIP) freeze --exclude-editable > requirements.txt
+
+
+#------------------------------------------------------------------------------
+# Bump version tasks
+#------------------------------------------------------------------------------
+.PHONY: bumpversion-patch bumpversion-minor bumpversion-major
+
+bumpversion-patch: | venv-build
+	$(BUMP_VERSION) patch
+
+bumpversion-minor: | venv-build
+	$(BUMP_VERSION) minor
+
+bumpversion-major: | venv-build
+	$(BUMP_VERSION) major
 
 
 #------------------------------------------------------------------------------

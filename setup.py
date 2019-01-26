@@ -30,5 +30,6 @@ setup(
         'beautifulsoup4>=4.7.1',
         'pymdown-extensions>=6.0',
         'awscli>=1.16.92',
+        'bump2version>=0.5.10',
     ],
 )
