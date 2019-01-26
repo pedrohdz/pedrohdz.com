@@ -86,6 +86,7 @@ PLANTUML_SHA256_FILE := $(PLANTUML_PRECHECK_FILE).sha256sum
 plantuml-install: $(PLANTUML_JAR)
 $(PLANTUML_JAR): | directories
 	wget \
+		--no-verbose \
 		--no-directories \
 		--directory-prefix $(BUILD_DIR) \
 		--output-document $(PLANTUML_PRECHECK_FILE) \

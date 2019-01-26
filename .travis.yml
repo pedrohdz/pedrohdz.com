@@ -1,0 +1,25 @@
+dist: xenial
+language: generic
+addons:
+  apt:
+    packages:
+      - graphviz
+      - python3-venv
+
+git:
+  submodules: false
+
+before_install:
+  - git submodule update --init
+
+script:
+  - make clean pelican-build-production
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: make deploy
+  on:
+    tags: true
+    repo: pedrohdz/pedrohdz.com
+    condition: '$TRAVIS_TAG =~ ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+$'

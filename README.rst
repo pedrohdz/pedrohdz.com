@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/pedrohdz/pedrohdz.com.svg?branch=master
+    :target: https://travis-ci.org/pedrohdz/pedrohdz.com
+
 ===============================================================================
 pedrohdz.com
 ===============================================================================

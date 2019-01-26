@@ -1,15 +1,15 @@
 [submodule "ext/pelican"]
 	path = ext/pelican
-	url = git@github.com:pedrohdz/pelican.git
+	url = https://github.com/pedrohdz/pelican.git
 [submodule "ext/bootswatch"]
 	path = ext/bootswatch
-	url = git@github.com:pedrohdz/bootswatch.git
+	url = https://github.com/pedrohdz/bootswatch.git
 [submodule "ext/plugins/pelican-plugins"]
 	path = ext/plugins/pelican-plugins
-	url = git@github.com:pedrohdz/pelican-plugins.git
+	url = https://github.com/pedrohdz/pelican-plugins.git
 [submodule "ext/themes/pelican-themes"]
 	path = ext/themes/pelican-themes
-	url = git@github.com:pedrohdz/pelican-themes.git
+	url = https://github.com/pedrohdz/pelican-themes.git
 [submodule "ext/plugins/other/pelican-bootstrapify"]
 	path = ext/plugins/other/pelican-bootstrapify
 	url = https://github.com/ingwinlu/pelican-bootstrapify.git
