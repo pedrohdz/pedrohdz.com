@@ -45,6 +45,7 @@ under *CloudFront*.
     https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-viewers-to-cloudfront.html
 
 .. uml::
+  :format: svg
   :class: center-block img-responsive drounin-figure
 
   skinparam handwritten true
@@ -118,6 +119,7 @@ both ``www.foo.bar`` and ``foo.bar`` have been configured as described in the
 
 
 .. uml::
+  :format: svg
   :class: center-block img-responsive drounin-figure
 
   skinparam handwritten true
