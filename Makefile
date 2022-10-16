@@ -1,89 +1,73 @@
-SITE := pedrohdz.com
-S3_BUCKET := $(SITE)
+ARCHIVE_DIR       ?= $(BUILD_DIR)/artifacts
 
-PLANTUML_VERSION := 1.2019.0
-PLANTUML_SHA256 := 767b2a3f5512ae0636fdaea8a54a58b96ffa8fd41933f941e6fb55bafed381e1
+SITE              := pedrohdz.com
+S3_BUCKET         := $(SITE)
 
-BUILD_DIR := build
-VENV_DIR := $(BUILD_DIR)/venv
-VENV_BIN_DIR := $(VENV_DIR)/bin
-VENV_CONFIG_FILES := requirements.txt setup.cfg setup.py Makefile
-PELICAN := ./$(VENV_BIN_DIR)/pelican
-PIP := ./$(VENV_BIN_DIR)/pip3
-AWS := ./$(VENV_BIN_DIR)/aws
-BUMP_VERSION = ./$(VENV_BIN_DIR)/bump2version
+PLANTUML_VERSION  := 1.2019.0
+PLANTUML_SHA256   := 767b2a3f5512ae0636fdaea8a54a58b96ffa8fd41933f941e6fb55bafed381e1
 
-export PATH := scripts:$(PATH)
+BUILD_DIR         := build
+
+VENV_DIR          := .venv
+VENV_BIN_DIR      := $(VENV_DIR)/bin
+VENV_CONFIG_FILES := requirements.txt Makefile
+PELICAN           := $(VENV_BIN_DIR)/pelican
+PIP               := $(VENV_BIN_DIR)/pip3
+AWS               := $(VENV_BIN_DIR)/aws
+
+export PATH         := scripts:$(PATH)
 export GRAPHVIZ_DOT := $(shell which dot)
-ifeq (,$(GRAPHVIZ_DOT))
-$(error Graphviz must be installed.)
-endif
 
 
 #------------------------------------------------------------------------------
 # Common tasks
 #------------------------------------------------------------------------------
-all: pelican-build-local
+all: pelican-build-production
 
-.PHONY: clean clean-python clean-all directories prepare
+.PHONY: clean distclean prepare
 
 clean:
-	rm -Rf $(BUILD_DIR) output
+	rm -Rf $(BUILD_DIR)
 
-clean-python:
-	find . -name __pycache__ -prune -exec rm -Rf \{\} \;
-	find . -name '*.egg-info' -prune -exec rm -Rf \{\} \;
+distclean: | clean venv-clean pelican-clean
 
-clean-all: | clean clean-python
-
-directories: $(BUILD_DIR)
-
-$(BUILD_DIR):
-	mkdir -p "$(BUILD_DIR)"
-
-prepare: | venv-build plantuml-install
+prepare: | venv-prepare pelican-prepare plantuml-prepare
 
 
 #------------------------------------------------------------------------------
 # Python venv tasks
 #------------------------------------------------------------------------------
-VENV_BUILT_FLAG := $(BUILD_DIR)/venv-build-FLAG
+VENV_BUILT_FLAG := $(BUILD_DIR)/venv-prepare-FLAG
 
-.PHONY: venv-build venv-clean venv-update-freeze
+.PHONY: venv-prepare venv-clean venv-update-requirements
 
 venv-clean:
+	find . -name __pycache__ -prune -exec rm -Rf \{\} \;
+	find . -name '*.egg-info' -prune -exec rm -Rf \{\} \;
 	rm -Rf \
 		$(VENV_BUILT_FLAG) \
 		$(VENV_DIR)
 
-venv-build: $(VENV_BUILT_FLAG)
-$(VENV_BUILT_FLAG): $(VENV_CONFIG_FILES) | directories
+venv-prepare: $(VENV_BUILT_FLAG)
+$(VENV_BUILT_FLAG): $(VENV_CONFIG_FILES)
+	mkdir -p $(@D)
 	python3 -m venv "$(VENV_DIR)"
-	$(PIP) install --upgrade pip
-	$(PIP) install \
-		--upgrade \
-		-e ./ext/pelican \
-		-e . \
-		-r requirements.txt
+	$(PIP) install --upgrade pip setuptools wheel
+	$(PIP) install --requirement requirements.txt
 	touch $(VENV_BUILT_FLAG)
 
-venv-update-freeze: | venv-build
+venv-update-requirements:
+ifneq ($(wildcard $(VENV_DIR)),)
+	$(error Python virtual environment must not be present: $(VENV_DIR))
+endif
+	python3 -m venv "$(VENV_DIR)"
+	$(PIP) install --upgrade pip setuptools wheel
+	$(PIP) install --upgrade \
+		awscli \
+		beautifulsoup4 \
+		pelican[markdown] \
+		pymdown-extensions
 	$(PIP) freeze --exclude-editable > requirements.txt
-
-
-#------------------------------------------------------------------------------
-# Bump version tasks
-#------------------------------------------------------------------------------
-.PHONY: bumpversion-patch bumpversion-minor bumpversion-major
-
-bumpversion-patch: | venv-build
-	$(BUMP_VERSION) patch
-
-bumpversion-minor: | venv-build
-	$(BUMP_VERSION) minor
-
-bumpversion-major: | venv-build
-	$(BUMP_VERSION) major
 
 
 #------------------------------------------------------------------------------
@@ -97,10 +81,11 @@ PLANTUML_JAR := $(BUILD_DIR)/plantuml.jar
 PLANTUML_PRECHECK_FILE := $(BUILD_DIR)/$(PLANTUML_VERSIONED_JAR_FILENAME).precheck
 PLANTUML_SHA256_FILE := $(PLANTUML_PRECHECK_FILE).sha256sum
 
-.PHONY: plantuml-install plantuml-docker-start plantuml-docker-stop
+.PHONY: plantuml-prepare plantuml-docker-start plantuml-docker-stop
 
-plantuml-install: $(PLANTUML_JAR)
-$(PLANTUML_JAR): | directories
+plantuml-prepare: $(PLANTUML_JAR)
+$(PLANTUML_JAR):
+	mkdir -p $(@D)
 	wget \
 		--no-verbose \
 		--no-directories \
@@ -128,55 +113,92 @@ plantuml-docker-stop:
 #------------------------------------------------------------------------------
 # Pelican tasks
 #------------------------------------------------------------------------------
-PELICAN_BUILT_LOCAL_FLAG := $(BUILD_DIR)/pelican-build-local-FLAG
-PELICAN_BUILT_PROD_FLAG := $(BUILD_DIR)/pelican-build-production-FLAG
-CONTENT_FILES := $(shell find ./content/ -type f | sed -e 's/ /\\ /') \
+BUILD_PREVIEW_SITE_DIR := $(BUILD_DIR)/site-dev
+BUILD_PROD_SITE_DIR    := $(BUILD_DIR)/site-prod
+CONTENT_FILES          := $(shell find ./content/ -type f | sed -e 's/ /\\ /') \
 				$(shell find ./theme-overrides/ -type f) \
 				pelicanconf.py \
 				publishconf.py
 
-.PHONY: pelican-server pelican-build-production pelican-build-local \
-	pelican-clean
+.PHONY: pelican-live-preview pelican-build-production pelican-clean pelican-prepare
+
+pelican-prepare:
+ifeq (,$(GRAPHVIZ_DOT))
+	$(error Graphviz must be installed.)
+endif
 
 pelican-clean:
 	rm -Rf \
-		output \
-		$(PELICAN_BUILT_LOCAL_FLAG) \
-		$(PELICAN_BUILT_PROD_FLAG)
+		$(BUILD_PREVIEW_SITE_DIR) \
+		$(BUILD_PROD_SITE_DIR)
 
-pelican-server: | prepare
+pelican-live-preview: | prepare pelican-prepare
+	mkdir -p $(BUILD_PREVIEW_SITE_DIR)
 	$(PELICAN) \
-		--verbose \
-		--delete-output-directory \
 		--autoreload \
-		--listen
-
-pelican-build-local: $(PELICAN_BUILT_LOCAL_FLAG)
-$(PELICAN_BUILT_LOCAL_FLAG): $(CONTENT_FILES) $(VENV_CONFIG_FILES) | prepare
-	$(PELICAN) \
-		--verbose \
-		--delete-output-directory
-	touch $(PELICAN_BUILT_LOCAL_FLAG)
-
-pelican-build-production: $(PELICAN_BUILT_PROD_FLAG)
-$(PELICAN_BUILT_PROD_FLAG): $(CONTENT_FILES) $(VENV_CONFIG_FILES) | prepare
-	$(PELICAN) \
-		--verbose \
 		--delete-output-directory \
-		--settings publishconf.py
-	touch $(PELICAN_BUILT_PROD_FLAG)
+		--listen \
+		--output "$(BUILD_PREVIEW_SITE_DIR)" \
+		--verbose
+
+pelican-build-production: $(BUILD_PROD_SITE_DIR)
+$(BUILD_PROD_SITE_DIR): $(CONTENT_FILES) $(VENV_CONFIG_FILES) | prepare pelican-prepare
+	mkdir -p $(@D)
+	tmp_dir=$$(mktemp --directory) \
+		&& $(PELICAN) \
+			--delete-output-directory \
+			--output $$tmp_dir \
+			--settings publishconf.py \
+			--verbose \
+		&& mv $$tmp_dir $@
 
 
 #------------------------------------------------------------------------------
 # Deployment tasks
 #------------------------------------------------------------------------------
-.PHONY: deploy
+ARCHIVE_FILE  := $(ARCHIVE_DIR)/site-production.tgz
+UNARCHIVE_DIR := $(BUILD_DIR)/site-prod-unarchived
+DEPLOY_TAG    := $(shell date --utc '+release-%Y%m%d-%H%M')
 
-deploy: | pelican-build-production
+.PHONY: archive deploy unarchive unarchive-clean deploy-tag-and-push
+
+archive: $(ARCHIVE_FILE)
+$(ARCHIVE_FILE): $(BUILD_PROD_SITE_DIR)
+	mkdir -p $(@D)
+	tar -zcvf $@ --directory=$(dir $<) $(notdir $<)
+
+unarchive-clean:
+	rm -Rf $(UNARCHIVE_DIR)
+
+unarchive: $(UNARCHIVE_DIR)
+$(UNARCHIVE_DIR):  # Do NOT make dependent on `archive`!
+	mkdir -p $(@D)
+	tmp_dir=$$(mktemp --directory) \
+		&& tar -zxvf $(ARCHIVE_FILE) --directory=$$tmp_dir --strip-components 1 \
+		&& mv -v $$tmp_dir/ $@/  # Trailing slashes are important!
+
+deploy-verify:
+	# TODO - Verify it can write, not just read.
+	# Verify connection to S3 bucket.
+	aws s3 ls s3://$(S3_BUCKET)/ > /dev/null
+
+deploy-tag-and-push: | deploy-verify
+	git tag --annotate $(DEPLOY_TAG) --message='Deployed via Makefile'
+	git push origin $(DEPLOY_TAG)
+
+deploy-from-archive: | unarchive venv-prepare deploy-tag-and-push
+	# TODO - Upload a file with the version information.
 	$(AWS) s3 sync \
 		--delete \
 		--exclude .DS_Store \
-		./output/ \
+		./$(UNARCHIVE_DIR)/ \
 		s3://$(S3_BUCKET)/
 
-# vim: noexpandtab:tabstop=4:shiftwidth=4
+deploy-from-local-build: | pelican-build-production deploy-tag-and-push
+	$(AWS) s3 sync \
+		--delete \
+		--exclude .DS_Store \
+		./$(BUILD_PROD_SITE_DIR)/ \
+		s3://$(S3_BUCKET)/
+
+# vim: noexpandtab:tabstop=2:shiftwidth=2

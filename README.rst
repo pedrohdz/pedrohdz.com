@@ -33,7 +33,7 @@ In one terminal execute:
 
 .. code:: sh
 
-  make pelican-server
+  make pelican-live-preview
 
 Point your browser at `http://localhost:8000/ <http://localhost:8000/>`_.
 
@@ -68,7 +68,14 @@ Apendix
 Todo tasks
 ^^^^^^^^^^
 
+- Move to GitHub Actions.
+- Update/configure Dependabot.
+- Add Super-linter.
+- Add GitHub edit links.
+- Update bootswatch.
 - Streamline git sub-modules.
+- Figure out what to do with analytics.
+- Add search?
 
 
 ^^^^^^^^^^^^^^^

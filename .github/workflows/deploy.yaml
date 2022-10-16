@@ -1,0 +1,54 @@
+name: Deploy site
+on:
+  workflow_run:
+    workflows: ['CI Checks & build']
+    branches: [master]
+    types: [completed]
+
+env:
+  ARCHIVE_DIR: build/artifacts
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: production-site-archive
+          path: ${{ env.ARCHIVE_DIR }}
+          run_id: ${{ github.event.workflow_run.id }}
+          workflow_conclusion: success
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Prepare
+        run: |
+          make venv-prepare
+
+      - name: Unarchive
+        run: |
+          make unarchive
+
+      - name: Deploy
+        run: |
+          # NOTICE - This step will execute the `deploy-tag-and-push` make task.
+          # TODO - Come up with a better name/email
+          git config --global user.email 'github-action-deploy@pedrohdz.com'
+          git config --global user.name 'GitHub Action Deployer'
+          make deploy-from-archive
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

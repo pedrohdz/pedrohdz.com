@@ -1,0 +1,34 @@
+name: CI Checks & build
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-package: jre
+          java-version: '17'
+      - name: Install Ubuntu packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install graphviz
+      - name: Prepare
+        run: |
+          make prepare
+      - name: Generate site & archive
+        run: |
+          make archive
+      - name: Save production site artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: production-site-archive
+          path: build/artifacts/site-production.tgz

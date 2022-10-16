@@ -96,7 +96,6 @@ MARKDOWN = {
         'markdown.extensions.def_list': {},
         'markdown.extensions.tables': {},
         'markdown.extensions.abbr': {},
-        'pymdownx.extrarawhtml': {},
         # END - pymdownx.extra
         'markdown.extensions.meta': {},
         'markdown.extensions.toc': {'anchorlink': True},
