@@ -26,6 +26,7 @@ jobs:
           make prepare
       - name: Generate site & archive
         run: |
+          # TODO - Only archive on master/main branch
           make archive
       - name: Save production site artifact
         uses: actions/upload-artifact@v3
