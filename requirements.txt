@@ -4,7 +4,7 @@ blinker==1.5
 botocore==1.29.3
 colorama==0.4.4
 commonmark==0.9.1
-docutils==0.16
+docutils==0.19
 feedgenerator==2.0.0
 Jinja2==3.1.2
 jmespath==1.0.1
