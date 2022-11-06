@@ -1,9 +1,11 @@
 version: 2
 updates:
-  - package-ecosystem: pip
-    directory: /
-    schedule:
-      interval: weekly
+  # TODO - Breaks requirements.txt.  Try and create a monthly that runs `make
+  # venv-update-requirements`.
+  # - package-ecosystem: pip
+  #   directory: /
+  #   schedule:
+  #     interval: weekly
 
   - package-ecosystem: github-actions
     directory: /
