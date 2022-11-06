@@ -1,5 +1,9 @@
-.. image:: https://travis-ci.org/pedrohdz/pedrohdz.com.svg?branch=master
-    :target: https://travis-ci.org/pedrohdz/pedrohdz.com
+.. image:: https://github.com/pedrohdz/pedrohdz.com/actions/workflows/build.yaml/badge.svg
+    :target: https://github.com/pedrohdz/pedrohdz.com/actions/workflows/build.yaml
+
+.. image:: https://github.com/pedrohdz/pedrohdz.com/actions/workflows/deploy.yaml/badge.svg
+    :target: https://github.com/pedrohdz/pedrohdz.com/actions/workflows/deploy.yaml
+
 
 ===============================================================================
 pedrohdz.com
